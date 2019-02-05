@@ -1,0 +1,119 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+namespace bc.dotpay.ewallet
+
+enum Type {
+  o Debit
+  o Credit
+  o Recharge
+}
+
+concept Transaction_History {
+  o DateTime date 
+  --> Wallet from optional
+  --> Wallet to
+  o Type type
+  o Integer amount_balance
+  o Integer left_amount
+  o String comment
+}
+
+concept  Bank_profile {
+  o String bank_name
+  o String account_number
+  o String branch_address
+}
+
+concept Friend_and_family {
+  o String first_name
+  o String middle_name
+  o String last_name
+  o String mobile_phone
+  o String email
+  o String date_of_birth
+  o String relation 
+}
+
+participant User identified by user_ID {
+  o String user_ID
+  o String first_name
+  o String middle_name optional
+  o String last_name
+  o String wallet_friendly_name 
+  o String home_phone optional
+  o String mobile_phone 
+  o String email
+  o String date_of_birth
+  o String ktp_ID optional
+  o String sim_ID optional
+  o Bank_profile[] bank_profile 
+  o Friend_and_family[] friend_and_family optional
+}
+
+asset Wallet identified by wallet_ID {
+  o String wallet_ID
+  o String user_ID
+  o String wallet_friendly_name
+  o Integer total_amount
+  o Transaction_History[] transaction_History
+}
+
+transaction RegisterAccount {
+  o String first_name
+  o String middle_name
+  o String last_name
+  o String wallet_friendly_name
+  o String home_phone
+  o String mobile_phone
+  o String email
+  o String date_of_birth
+  o String ktp_ID
+  o String sim_ID
+  o String bank_name
+  o String account_number
+  o String branch_address
+}
+
+transaction AddMoreBankAcount {
+  --> User user_ID
+  o String bank_name
+  o String account_number
+  o String branch_address
+}
+
+transaction RechargeWallet {
+  --> Wallet wallet
+  o Integer amount
+}
+
+transaction TransferAmount {
+  --> Wallet from
+  --> Wallet to
+  o Integer amount
+}
+
+transaction AddFriendsAndFamily {
+  --> User user_ID
+  o String first_name
+  o String middle_name
+  o String last_name
+  o String mobile_phone
+  o String email
+  o String date_of_birth
+  o String relation 
+}
